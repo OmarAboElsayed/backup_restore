@@ -105,47 +105,36 @@ Install GPG
 For Ubuntu/any Debian based distributions
 
 sudo apt install gnupg
+## encryption key that you should use to encrypt your backup 
 
-Verify Installation
+```
+  # Set the filename of the file to be encrypted and the name and email address for the new keypair
+filename="file.txt"
+name="omar mohamed"
+email="omaraboelsayed2000@gmail.com"
 
-gpg --version
-GPG Commands
-Generate a new key with default configuration (Quick Key Generation)
-gpg --generate-key
+# Generate a new GPG keypair
+# Set the filename of the file to be encrypted and the name and email address for the new keypair
+filename="file.txt"
+name="omar mohamed"
+email="omaraboelsayed2000@example.com"
+passphrase="mysecretpassphrase"
 
-## It will prompt you for the following
-# Real Name
-# Email Address
-# Passphase
-Generate a new key with your own configuration (Full Key Generation)
-gpg --full-generate-key
+# Generate a new GPG keypair with default settings
+echo -e "Key-Type: RSA\nKey-Length: 2048\nSubkey-Type: RSA\nSubkey-Length: 2048\nName-Real: $name\nName-Email: $email\nExpire-Date: 0\nPassphrase: $passphrase\n%commit\n" | gpg --batch --generate-key
 
-## It will prompt you for the following
-# Key Encryption Type
-# Key Size
-# Key Expiry
-# Real Name
-# Email Address
-# Comment
-# Passphase
-List all GPG public keys
-gpg --list-keys
-List all GPG private key pairs
-gpg --list-secret-keys
-Export Public Key in ASCII Format
-## Output to STDOUT
-gpg --armor --export <email-Id>
+# Export the public key and save it to a file
+gpg --armor --output public_key.asc --export "$email"
 
-## Output to a file
-gpg --armor --export --output <file.txt> <email-Id>
-Encrypt a file for a specific user using GPG (Using Asymmetric Encryption)
-gpg --encrypt --recipient <recipient-user-email> <file-name>
-Encrypt a file using GPG (Uses Symmetric Encryption)
-gpg --symmetric <file-name>
+# Sign the public key with your existing key
+gpg --armor --output signed_public_key.asc --sign-key "$email"
 
-## It will prompt for a password
-Decrypt that encrypted file (For Both, Symmetric and Asymmetric Encryption)
-gpg --decrypt <encrypted-file>
+# Encrypt the file using the new public key
+gpg --symmetric --cipher-algo AES256 --batch --yes --passphrase "$passphrase" --output "$filename.gpg" "$filename"
+gpg --encrypt --recipient "$email" "$filename"
+```
+
+
 
 ## restore 
 ## Feature
