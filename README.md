@@ -83,7 +83,8 @@ sudo systemctl enable cron
 ```
 sudo crontab -e
 minute hour day_of_month month day_of_week command_to_run
-`Eg. 0 5 - - 6 $HOME/backup.sh >/dev/null 2>&1`
+`23 0 0 0 /bin/bash /home/omar/document/backup.sh
+`23 0 0 0 /bin/bash /home/omar/document/restore.sh
 
 ```
 
@@ -104,9 +105,7 @@ Install GPG
 For Ubuntu/any Debian based distributions
 
 sudo apt install gnupg
-For CentOS/ RHEL based distributions
 
-sudo yum install gnupg
 Verify Installation
 
 gpg --version
@@ -148,8 +147,26 @@ gpg --symmetric <file-name>
 Decrypt that encrypted file (For Both, Symmetric and Asymmetric Encryption)
 gpg --decrypt <encrypted-file>
 
+## restore 
+## Feature
+1. The restore script works the same way as the backup but in the reverse order.
+2. Create a temp directory under the restore directory; command-line parameter #2.
+3. Loop over all the files in the backup directory; command-line parameter #1.
+4. Use gnupg tool to decrypt the files one by one and store the resulting file under the temp
+directory created in point #2. Use the decryption key provided via the command-line user input
+#3.
+5. Loop over the files stored in the temp directory and extract them one by one under the
+restore directory; command-line parameter #2.
 
-
+## parameters
+      the first parameter is the directory that contains the backup, 
+      the second parameter is the directory that the backup should be restored to, and 
+      the third parameter is the decryption key that should be used to restore the backup.
+## RUN 
+```
+chmod 777 restore.sh
+./restore.sh
+```
 
 
 
